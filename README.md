@@ -31,7 +31,7 @@
 
 We can customize the **./logstash/config/logstash.yml** file.
 
-```json
+```
 input {
   tcp{
 	port => 5000
@@ -55,7 +55,7 @@ In the output section, Elasticsearch is defined as the destination for the data 
 
 We can customize the **./logstash/pipeline/logstash.conf** file.
 
- ```json
+ ```
 # Set Logstash HTTP API host
 http.host: "0.0.0.0"
 
