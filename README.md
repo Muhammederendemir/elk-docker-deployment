@@ -3,7 +3,7 @@
 
 ## 📦 Project Architecture
 
-![ELK Arch](https://github.com/Muhammederendemir/elk-docker-deployment/blob/main/docs/image/ELK-Arch.png)
+![ELK Arch](https://github.com/Muhammederendemir/elk-docker-deployment/blob/master/docs/image/ELK-Arch.png)
 
 
 
