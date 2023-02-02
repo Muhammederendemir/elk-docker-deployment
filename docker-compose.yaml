@@ -1,0 +1,79 @@
+version: "3"
+
+services:
+  
+    # Elasticsearch service
+    elasticsearch:
+      image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
+      container_name: elasticsearch_springboot
+      environment:
+          # Set bootstrap memory lock and Java options
+          - bootstrap.memory_lock=true
+          - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+          # Set discovery type to single-node
+          - "discovery.type=single-node"
+          # Disable xpack security
+          - xpack.security.enabled=false
+      ports:
+          # Map Elasticsearch port 9200 to the host
+          - "9200:9200"
+      volumes:
+          # Mount Elasticsearch data volume
+          - elasticsearch_data:/usr/share/elasticsearch/data
+      networks:
+          # Connect to the elastic network
+          - elastic
+
+    # Kibana service
+    kibana:
+      image: docker.elastic.co/kibana/kibana:8.3.3
+      container_name: kibana_springboot
+      ports:
+          # Map Kibana port 5601 to the host
+          - "5601:5601"
+      environment:
+          # Set Elasticsearch URL and hosts
+          ELASTICSEARCH_URL: http://elasticsearch:9200
+          ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+      depends_on:
+          # Wait for Elasticsearch to start before starting Kibana
+          - elasticsearch
+      networks:
+          # Connect to the elastic network
+          - elastic
+
+    # Logstash service
+    logstash:
+      image: docker.elastic.co/logstash/logstash:8.3.3
+      container_name: logstash_springboot
+      volumes:
+        # Mount Logstash YML configuration file
+        - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+        # Mount Logstash pipeline
+        - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      ports:
+        # Map Logstash ports 5044, 5000, 9600 to the host
+        - "5044:5044"
+        - "5000:5000/tcp"
+        - "5000:5000/udp"
+        - "9600:9600"
+      environment:
+        # Set Logstash Java options
+        LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      networks:
+        # Connect to the elastic network
+        - elastic
+      depends_on:
+        # Wait for Elasticsearch to start before starting Logstash
+        - elasticsearch
+
+# Networks definition
+networks:
+  elastic:
+    driver: bridge
+
+# Volumes definition
+volumes:
+    # Elasticsearch data volume
+    elasticsearch_data:
+        driver: local
