@@ -85,13 +85,13 @@ It can be customized based on the comment lines found in the **docker-compose.ya
 Clone the project
 
 ```bash
-  git clone 
+  git clone https://github.com/Muhammederendemir/elk-docker-deployment.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd 
+  cd elk-docker-deployment
 ```
 
 Run 3rd Party products with Docker
